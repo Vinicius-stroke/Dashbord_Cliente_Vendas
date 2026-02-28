@@ -1,0 +1,72 @@
+.table td, .table th {
+  vertical-align: middle;
+}
+
+.table td {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.card {
+  border-radius: 12px;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-weight: 500;
+  padding: 6px 10px;
+}
+
+.btn-outline-primary {
+  border-radius: 8px;
+}
+
+.btn-outline-danger {
+  border-radius: 8px;
+}
+
+
+  .timeline {
+    position: relative;
+    padding-left: 3rem;
+    list-style: none;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .timeline-marker {
+    position: absolute;
+    left: -2.4rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #198754; /* Verde sucesso */
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+  }
+  .change-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    color: #495057;
+  }
+
+  
+  

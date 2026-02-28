@@ -1,0 +1,79 @@
+<%- include('./includes/header') %>
+<%- include('./includes/navbar') %>
+
+<div class="container mt-4">
+
+  <!-- Cabeçalho -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="text-secondary">Perfis dos Vendedores</h3>
+  </div>
+
+  <!-- Lista de vendedores -->
+  <div class="row">
+    <% vendedores.forEach(vendedor => { %>
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+
+            <h5 class="text-primary mb-3"><%= vendedor.nome %></h5>
+
+            <p><strong>Email:</strong> <%= vendedor.email %></p>
+            <p><strong>Telefone:</strong> <%= vendedor.telefone %></p>
+
+            <a href="/dashboard/perfis/<%= vendedor._id %>" 
+               class="btn btn-primary btn-sm">
+              Ver Perfil
+            </a>
+
+            <button class="btn btn-danger btn-sm float-end"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmarExclusao<%= vendedor._id %>">
+              <i class="bi bi-trash"></i>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal individual -->
+      <div class="modal fade" id="confirmarExclusao<%= vendedor._id %>" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title text-danger">Confirmar Exclusão</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+              Tem certeza que deseja excluir o perfil de 
+              <strong><%= vendedor.nome %></strong>?
+              <br>
+              <small class="text-muted">
+                Esta ação não poderá ser desfeita.
+              </small>
+            </div>
+
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+              </button>
+
+              <form action="/dashboard/perfis/<%= vendedor._id %>?_method=DELETE" 
+                    method="POST">
+                <button type="submit" class="btn btn-danger">
+                  Confirmar Exclusão
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    <% }) %>
+  </div>
+
+</div>
+
+<%- include('./includes/footer') %>

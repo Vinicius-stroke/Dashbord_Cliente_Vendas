@@ -1,0 +1,46 @@
+<%- include('includes/header') %>
+<%- include('includes/navbar') %>
+
+<!-- LOGIN -->
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+
+    <h3 class="text-center mb-4">Entrar</h3>
+
+    <%- include('includes/messages') %>
+
+    <form action="/login/login" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email"
+               class="form-control"
+               name="email"
+               placeholder="Digite seu email"
+               required>
+      </div>
+
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password"
+               class="form-control"
+               name="password"
+               placeholder="Digite sua senha"
+               required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">
+        Login
+      </button>
+    </form>
+
+    <div class="text-center mt-3">
+      <span>Não tem conta?</span>
+      <a href="/login/register">Cadastre-se</a>
+    </div>
+
+  </div>
+</div>
+
+<%- include('includes/footer') %>

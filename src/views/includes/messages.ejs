@@ -1,0 +1,19 @@
+<% const errs = Array.isArray(errors) ? errors : [] %>
+<% const succ = Array.isArray(success) ? success : [] %>
+
+<% if (errs.length > 0) { %>
+<div class="alert alert-danger">
+  <% errs.forEach(e => { %>
+    <div><%= e %></div>
+  <% }) %>
+</div>
+<% } %>
+
+<% if (succ.length > 0) { %>
+<div class="alert alert-success">
+  <% succ.forEach(s => { %>
+    <div><%= s %></div>
+  <% }) %>
+</div>
+<% } %>
+

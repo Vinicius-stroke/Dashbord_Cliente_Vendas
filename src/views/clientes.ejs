@@ -1,0 +1,181 @@
+<%- include('includes/header') %>
+<%- include('includes/navbar') %>
+
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body">
+
+    <form method="GET" action="/clientes/index" class="form-row align-items-end">
+      
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <%- include('includes/messages') %>
+
+      <!-- BUSCA -->
+      <div class="form-group col-md-4">
+        <label class="small text-muted">Buscar cliente</label>
+        <input
+          type="text"
+          name="busca"
+          value="<%= filtros.busca || '' %>"
+          class="form-control"
+          placeholder="Nome, CPF ou telefone"
+        >
+      </div>
+
+      <!-- STATUS -->
+      <div class="form-group col-md-3">
+        <label class="small text-muted">Status</label>
+        <select name="status" class="form-control">
+          <option value="">Todos</option>
+          <option value="pendente" <%= filtros.status === 'pendente' ? 'selected' : '' %>>Pendente</option>
+          <option value="realizada" <%= filtros.status === 'realizada' ? 'selected' : '' %>>Realizada</option>
+          <option value="cancelada" <%= filtros.status === 'cancelada' ? 'selected' : '' %>>Cancelada</option>
+          <option value="reagendada" <%= filtros.status === 'reagendada' ? 'selected' : '' %>>Reagendada</option>
+        </select>
+      </div>
+
+      <!-- FILTRO POR VENDEDOR (SÓ GERENTE) -->
+      <% if (user && user.role === 'gerente') { %>
+      <div class="form-group col-md-3">
+        <label class="small text-muted">Vendedor</label>
+        <select name="user" class="form-control">
+          <option value="">Todos</option>
+          <% vendedores.forEach(v => { %>
+            <option value="<%= v._id %>" <%= filtros.user == v._id ? 'selected' : '' %>>
+              <%= v.nome %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <% } %>
+
+      <!-- BOTÕES -->
+      <div class="form-group col-md-1">
+        <button class="btn btn-primary btn-block">Filtrar</button>
+      </div>
+
+      <div class="form-group col-md-1">
+        <a href="/clientes/index" class="btn btn-outline-secondary btn-block">Limpar</a>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+<div class="table-responsive">
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+
+      <table class="table table-hover align-middle mb-0">
+
+        <thead class="thead-light">
+          <tr>
+            <th>Cliente</th>
+            <th>Contato</th>
+            <th>Plano</th>
+            <th>Status</th>
+            <th>Vendedor</th>
+            <th>Técnico</th>
+            <th>Data</th>
+            <th class="text-right">Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% vendas.forEach(venda => { %>
+      <tr>
+
+        <td>
+          <strong><%= venda.cliente?.nome || 'Sem nome' %></strong>
+          <div class="text-muted small">
+            CPF: <%= venda.cliente?.cpf || '-' %>
+          </div>
+        </td>
+
+        <td>
+          <div><%= venda.cliente?.telefone || '-' %></div>
+          <div class="text-muted small">
+            <%= venda.cliente?.email || '' %>
+          </div>
+        </td>
+
+        <td>
+          <span class="badge badge-info">
+            <%= venda.plano || '-' %>
+          </span>
+        </td>
+
+        <td>
+          <% if (venda.status === 'realizada') { %>
+            <span class="badge badge-success">Realizada</span>
+          <% } else if (venda.status === 'cancelada') { %>
+            <span class="badge badge-danger">Cancelada</span>
+          <% } else if (venda.status === 'reagendada') { %>
+            <span class="badge badge-warning">Reagendada</span>
+          <% } else { %>
+            <span class="badge badge-secondary">Pendente</span>
+          <% } %>
+        </td>
+
+        <td>
+          <%= venda.vendedor?.nome || '-' %>
+        </td>
+
+        <td>
+          <%= venda.tecnicoResponsavel || '-' %>
+        </td>
+
+        <td>
+          <%= new Date(venda.createdAt).toLocaleDateString('pt-BR') %>
+        </td>
+
+        <td class="text-right">
+
+          <% if (user && (user.role === 'gerente' || user.role === 'intermediario')) { %>
+            <a href="/clientes/index/<%= venda._id %>" 
+              class="btn btn-sm btn-outline-primary">
+              Editar
+            </a>
+          <% } %>
+
+          <% if (user && user.role === 'gerente') { %>
+            <a href="/clientes/delete/<%= venda._id %>" 
+              class="btn btn-sm btn-outline-danger">
+              Excluir
+            </a>
+          <% } %>
+
+          <a href="/clientes/historico/<%= venda.cliente._id %>" 
+            class="btn btn-sm btn-outline-info"
+            title="Ver histórico">
+            ℹ️
+          </a>
+
+        </td>
+
+</tr>
+<% }) %>
+        </tbody>
+
+      </table>
+
+    </div>
+  </div>
+</div>
+
+<%- include('includes/footer') %>
+<script>
+const inputBusca = document.querySelector('input[name="busca"]')
+let timeout = null
+
+if (inputBusca) {
+  inputBusca.addEventListener('input', () => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      inputBusca.form.submit()
+    }, 500)
+  })
+}
+</script>

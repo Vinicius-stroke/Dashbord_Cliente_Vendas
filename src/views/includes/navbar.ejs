@@ -1,0 +1,58 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    
+    <a class="navbar-brand font-weight-bold" href="/login/index">
+      NetmaniaCliente
+    </a>
+
+    <button class="navbar-toggler" 
+            type="button" 
+            data-toggle="collapse" 
+            data-target="#menu"
+            aria-controls="menu"
+            aria-expanded="false"
+            aria-label="Alternar navegação">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="menu">
+      <ul class="navbar-nav ml-auto align-items-lg-center">
+
+        <li class="nav-item mr-2">
+          <a class="nav-link text-white" href="/login/index">
+            Login
+          </a>
+        </li>
+
+        <% if (user && (user.role === 'intermediario' || user.role === 'vendedor')) { %>
+        <li class="nav-item mr-2">
+          <a href="/clientes/cadastrar" class="nav-link text-white">
+            Novo Cliente
+          </a>
+        </li>
+        <% } %>
+
+        <li class="nav-item mr-2">
+          <a class="nav-link text-white" href="/clientes/index">
+            Clientes
+          </a>
+        </li>
+
+        <li class="nav-item mr-2">
+          <a class="nav-link text-white" href="/login/dashboard">
+            Dashboard
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/login/logout">
+            Sair
+          </a>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</nav>

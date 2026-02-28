@@ -1,0 +1,127 @@
+<%- include('includes/header') %>
+<%- include('includes/navbar') %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+      <div class="card shadow border-0">
+        <div class="card-body p-4">
+
+          <h3 class="text-center mb-4">
+            <%= contato && venda && venda._id ? 'Editar Cliente' : 'Cadastro de Cliente' %>
+          </h3>
+
+          <%- include('includes/messages') %>
+
+          <form action="<%= venda?._id ? '/clientes/edit/' + venda._id : '/clientes/cadastrar' %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+            <!-- ================= CLIENTE ================= -->
+
+            <div class="form-group">
+              <label>Nome completo</label>
+              <input type="text" name="nome" class="form-control"
+                value="<%= contato?.nome || '' %>" required>
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" class="form-control"
+                value="<%= contato?.email || '' %>">
+            </div>
+
+            <div class="form-group">
+              <label>Telefone</label>
+              <input type="text" name="telefone" class="form-control"
+                value="<%= contato?.telefone || '' %>"
+                placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="form-group">
+              <label>CPF</label>
+              <input type="text" name="cpf" class="form-control"
+                value="<%= contato?.cpf || '' %>"
+                placeholder="000.000.000-00" required>
+            </div>
+
+            <div class="form-group">
+              <label>Bairro</label>
+              <input type="text" name="bairro" class="form-control"
+                value="<%= contato?.bairro || '' %>" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Número da casa</label>
+                <input type="text" name="numeroCasa" class="form-control"
+                  value="<%= contato?.numeroCasa || '' %>" required>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Número da rua</label>
+                <input type="text" name="numeroRua" class="form-control"
+                  value="<%= contato?.numeroRua || '' %>" required>
+              </div>
+            </div>
+
+            <hr>
+
+            <!-- ================= VENDA ================= -->
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Plano de Internet</label>
+                <select name="plano" class="form-control" required>
+                  <option value="">Selecione um plano</option>
+                  <option value="50mb"  <%= venda?.plano === '50mb' ? 'selected' : '' %>>50 MB</option>
+                  <option value="100mb" <%= venda?.plano === '100mb' ? 'selected' : '' %>>100 MB</option>
+                  <option value="200mb" <%= venda?.plano === '200mb' ? 'selected' : '' %>>200 MB</option>
+                  <option value="500mb" <%= venda?.plano === '500mb' ? 'selected' : '' %>>500 MB</option>
+                  <option value="1gb"   <%= venda?.plano === '1gb' ? 'selected' : '' %>>1 GB</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Status da venda</label>
+                <select name="status" class="form-control">
+                  <option value="pendente"   <%= venda?.status === 'pendente' ? 'selected' : '' %>>Pendente</option>
+                  <option value="realizada"  <%= venda?.status === 'realizada' ? 'selected' : '' %>>Realizada</option>
+                  <option value="cancelada"  <%= venda?.status === 'cancelada' ? 'selected' : '' %>>Cancelada</option>
+                  <option value="reagendada" <%= venda?.status === 'reagendada' ? 'selected' : '' %>>Reagendada</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label>Técnico responsável</label>
+                <select name="tecnicoResponsavel" class="form-control">
+                  <option value="">Selecione um técnico</option>
+                  <option value="Erik" <%= venda?.tecnicoResponsavel === 'Erik' ? 'selected' : '' %>>Erik</option>
+                  <option value="Rickelme" <%= venda?.tecnicoResponsavel === 'Rickelme' ? 'selected' : '' %>>Rickelme</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Valor mensal</label>
+                <input type="number" name="valor" class="form-control"
+                  value="<%= venda?.valor || '' %>"
+                  placeholder="R$ 0,00" step="0.01">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              Salvar Cliente
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<%- include('includes/footer') %>

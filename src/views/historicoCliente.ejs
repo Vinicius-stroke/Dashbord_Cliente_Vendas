@@ -1,0 +1,126 @@
+<%- include('includes/header') %>
+
+<div class="container py-5">
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-white px-0">
+      <li class="breadcrumb-item">
+        <a href="/clientes/index">Clientes</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Histórico de Alterações
+      </li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h4 font-weight-bold mb-0 text-dark">
+      Histórico:
+      <span class="text-muted">
+        <%= contato.nome %> <%= contato.sobrenome %>
+      </span>
+    </h2>
+
+    <a href="/clientes/index" class="btn btn-sm btn-primary shadow-sm">
+      ← Voltar à lista
+    </a>
+  </div>
+
+  <% if (contato.historico.length === 0) { %>
+    <div class="alert alert-light border text-center py-5 shadow-sm">
+      <p class="mb-0 text-muted">
+        Nenhum registro de modificação encontrado.
+      </p>
+    </div>
+  <% } else { %>
+
+    <% contato.historico.reverse().forEach((item, index) => { %>
+
+      <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-header bg-white border-bottom py-3">
+          <div class="row align-items-center">
+
+            <div class="col-auto">
+              <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                   style="width: 40px; height: 40px;">
+                <small class="font-weight-bold">
+                  <%= index + 1 %>
+                </small>
+              </div>
+            </div>
+
+            <div class="col">
+              <h6 class="mb-0 font-weight-bold text-primary">
+                <%= (item.alteradoPor && item.alteradoPor.nome)
+                    ? item.alteradoPor.nome
+                    : (item.nomeAlterador || 'Sistema') %>
+              </h6>
+
+              <small class="text-muted">
+                Editado em:
+                <%= new Date(item.data).toLocaleString('pt-BR') %>
+              </small>
+            </div>
+
+            <div class="col-auto">
+              <span class="badge badge-info badge-pill">
+                <%= item.alteracoes.length %> modificação(ões)
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+
+            <table class="table table-hover mb-0">
+
+              <thead class="thead-light">
+                <tr class="small text-uppercase text-muted">
+                  <th class="pl-4" style="width: 25%">Campo Alterado</th>
+                  <th style="width: 35%">Valor Anterior</th>
+                  <th style="width: 5%"></th>
+                  <th style="width: 35%" class="pr-4">Novo Valor</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% item.alteracoes.forEach(a => { %>
+                  <tr>
+
+                    <td class="pl-4 font-weight-bold text-secondary">
+                      <%= a.campo %>
+                    </td>
+
+                    <td class="text-muted small font-italic">
+                      <%= a.antes || '(vazio)' %>
+                    </td>
+
+                    <td class="text-center text-primary">
+                      &rarr;
+                    </td>
+
+                    <td class="pr-4 text-dark">
+                      <%= a.depois || '(vazio)' %>
+                    </td>
+
+                  </tr>
+                <% }) %>
+              </tbody>
+
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+
+    <% }) %>
+
+  <% } %>
+
+</div>
+
+<%- include('includes/footer') %>

@@ -1,0 +1,218 @@
+<%- include('./includes/header') %>
+<%- include('./includes/navbar') %>
+
+<div class="container-fluid mt-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <h2 class="text-secondary mb-2 mb-lg-0">Visão Geral</h2>
+  </div>
+
+  <!-- ===================== -->
+  <!-- CARDS PRINCIPAIS -->
+  <!-- ===================== -->
+  <div class="row mb-4">
+
+    <!-- Total de Vendas -->
+    <div class="col-12 col-md-3 mb-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <small class="text-muted fw-bold">Total de Vendas</small>
+          <h4 class="mt-2 text-primary">
+            R$ <%= (dashboard.totalFaturamento || 0).toLocaleString('pt-BR') %>
+          </h4>
+
+          <%
+            let crescimento = dashboard.crescimentoMensal || 0;
+            let positivo = crescimento >= 0;
+          %>
+
+          <small class="<%= positivo ? 'text-success' : 'text-danger' %>">
+            <i class="bi <%= positivo ? 'bi-arrow-up' : 'bi-arrow-down' %> me-1"></i>
+            <%= Math.abs(crescimento).toFixed(2) %>% desde o mês anterior
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Perdas -->
+    <div class="col-12 col-md-3 mb-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <small class="text-muted fw-bold">Perdas</small>
+          <h4 class="mt-2 text-danger">
+            R$ <%= (dashboard.totalCanceladas || 0).toLocaleString('pt-BR') %>
+          </h4>
+          <small class="text-muted">Canceladas / improdutivas</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Média -->
+    <div class="col-12 col-md-3 mb-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <small class="text-muted fw-bold">Ticket Médio</small>
+          <h4 class="mt-2 text-primary">
+            R$ <%= (dashboard.mediaVendas || 0).toLocaleString('pt-BR') %>
+          </h4>
+          <small class="text-muted">Média por venda realizada</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clientes -->
+    <div class="col-12 col-md-3 mb-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <small class="text-muted fw-bold">Clientes</small>
+          <h4 class="mt-2 text-primary">
+            <%= dashboard.totalClientes || 0 %>
+          </h4>
+          <small class="text-muted">Base cadastrada</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ===================== -->
+  <!-- VENDEDORES -->
+  <!-- ===================== -->
+  <h4 class="mb-3">Desempenho dos Vendedores</h4>
+
+  <% if (vendedoresStats && vendedoresStats.length > 0) { %>
+
+    <div class="row mb-5">
+
+      <% vendedoresStats.forEach(function(item, index) { 
+
+        let totalTentativas = item.realizadas + item.canceladas;
+        let taxaConversao = totalTentativas > 0
+          ? ((item.realizadas / totalTentativas) * 100).toFixed(1)
+          : 0;
+
+        let desempenhoPositivo = taxaConversao >= 50;
+      %>
+
+      <!-- Card Vendedor -->
+      <div class="col-12 col-md-3 mb-4">
+        <div class="card shadow-sm border-0 h-100"
+             style="cursor:pointer"
+             data-bs-toggle="modal"
+             data-bs-target="#modalVendedor<%= index %>">
+
+          <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="fw-bold text-muted">
+                <%= item._id?.nome || 'Vendedor não encontrado' %>
+              </small>
+
+              <span class="badge <%= desempenhoPositivo ? 'bg-success' : 'bg-danger' %>">
+                <%= taxaConversao %>%
+              </span>
+            </div>
+
+            <h5 class="mt-3 text-primary">
+              R$ <%= (item.totalValor || 0).toLocaleString('pt-BR') %>
+            </h5>
+
+            <small class="text-muted d-block">
+              ✔ <strong><%= item.realizadas %></strong> vendas
+            </small>
+
+            <small class="text-muted d-block">
+              ✖ <strong><%= item.canceladas %></strong> perdas
+            </small>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="modalVendedor<%= index %>" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content border-0 shadow">
+
+            <div class="modal-header bg-light">
+              <h5 class="modal-title fw-bold">
+                Desempenho de <%= item._id?.nome || 'Vendedor' %>
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+              <div class="row text-center mb-4">
+
+                <div class="col-md-3">
+                  <h6 class="text-success"><%= item.realizadas %></h6>
+                  <small class="text-muted">Realizadas</small>
+                </div>
+
+                <div class="col-md-3">
+                  <h6 class="text-danger"><%= item.canceladas %></h6>
+                  <small class="text-muted">Perdas</small>
+                </div>
+
+                <div class="col-md-3">
+                  <h6 class="text-warning"><%= item.reagendadas %></h6>
+                  <small class="text-muted">Reagendadas</small>
+                </div>
+
+                <div class="col-md-3">
+                  <h6 class="<%= desempenhoPositivo ? 'text-success' : 'text-danger' %>">
+                    <%= taxaConversao %>%
+                  </h6>
+                  <small class="text-muted">Conversão</small>
+                </div>
+
+              </div>
+
+              <hr>
+
+              <div class="row text-center">
+
+                <div class="col-md-6">
+                  <h5 class="text-primary">
+                    R$ <%= (item.totalValor || 0).toLocaleString('pt-BR') %>
+                  </h5>
+                  <small class="text-muted">Total Vendido</small>
+                </div>
+
+                <div class="col-md-6">
+                  <h5 class="text-secondary">
+                    R$ <%= (item.ticketMedio || 0).toLocaleString('pt-BR') %>
+                  </h5>
+                  <small class="text-muted">Ticket Médio</small>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <% }) %>
+
+    </div>
+
+  <% } else { %>
+
+    <div class="alert alert-light text-center shadow-sm">
+      Nenhum vendedor encontrado.
+    </div>
+
+  <% } %>
+
+
+  <!-- ===================== -->
+  <!-- GRÁFICOS -->
+  <!-- ===================== -->
+
+
+<%- include('./includes/footer') %>
